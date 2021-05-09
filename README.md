@@ -3,9 +3,9 @@
 ## Team name: TEAM_NAME
 
 Team members:
-* S287802 TEKAM LAPA Luc-Gabin
+* s287646 Pronesti Massimiliano
+* s287802 Tekam Lapa Luc-Gabin
 * s286584 Hobballah Yasser
-* s123456 LASTNAME FIRSTNAME
 * s123456 LASTNAME FIRSTNAME (delete line if not needed)
 
 ## Instructions
