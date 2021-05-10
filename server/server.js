@@ -11,15 +11,30 @@ app.use(express.json());
 
 /* ------ APIs ------ */
 
-// GET /todos
+// GET /tasks
+app.get('/tasks', (req, res) => {
+    // call getTasks here 
+});
 
-// GET /todos/:id
+// GET /tasls/:id
+app.get('/tasks/:id', (req, res) => {
+    // call getTask here 
+});
 
-// POST /todos
+// POST /tasks
+app.get('/tasks', (req, res) => {
+    // call createTask here 
+});
 
-// DELETE /todos/:id
+// DELETE /taks/:id
+app.get('/tasks', (req, res) => {
+    // call deleteTask here 
+});
 
-// PUT /todos/:id
+// PUT /tasks/:id
+app.get('/tasks/:id', (req, res) => {
+    // call updateTask here 
+});
 
 // activate server
 app.listen(PORT, ()=>console.log(`Server running on http://localhost:${PORT}/`));
