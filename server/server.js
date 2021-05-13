@@ -14,12 +14,28 @@ app.use(express.json());
 
 // GET /tasks
 app.get('/tasks', (req, res) => {
-    // call getTasks here 
+    dao.getTasks()
+        .then((tasks) => {res.json(tasks); })
+        .catch((err) => {res.status(500).json(err); });
 });
 
-// GET /tasls/:id
-app.get('/tasks/:id', (req, res) => {
-    // call getTask here 
+// GET /tasks/:filter
+app.get('/tasks/:filter', (req, res) => {
+    const filter = req.params.filter;
+    dao.getTasks(filter)
+        .then((tasks) => {res.json(tasks); })
+        .catch((err) => {res.status(503).json(err); });
+});
+
+// GET /tasks/:id
+app.get('/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        let task = await dao.getTask(id);
+        res.json(task);
+    } catch (err) {
+        res.status(503).json(err);
+    }
 });
 
 // POST /tasks
