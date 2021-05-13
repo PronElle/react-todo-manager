@@ -47,8 +47,8 @@ app.post('/tasks', [
     }
 
     dao.createTask(req.body)
-    .then(()=>res.status(250).end())
-    .catch(error => res.status(550).json(error))
+       .then(() => res.status(250).end())
+       .catch(error => res.status(550).json(error))
 });
 
 // DELETE /taks/:id
@@ -72,14 +72,18 @@ app.put('/tasks/:id', [
             return res.status(422).json({ errors: errors.array() });
         }
 
-        const task = req.body;
-        const id = req.params.id;
+        if(!req.body.id)
+            res.status(400).end();
+        else {
+            const task = req.body;
+            const id = req.params.id;
 
-        dao.updateTask(id, task)
-            .then(() => res.status(200).end())
-            .catch((err) => res.status(503).json({
-                errors: [{ 'param': 'Server', 'msg': err }]
-            }));
+            dao.updateTask(id, task)
+                .then(() => res.status(200).end())
+                .catch((err) => res.status(503).json({
+                    errors: [{ 'param': 'Server', 'msg': err }]
+                }));
+        }
     });
 
 
