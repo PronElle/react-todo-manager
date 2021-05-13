@@ -14,34 +14,45 @@ app.use(express.json());
 
 // GET /tasks
 app.get('/tasks', (req, res) => {
-    // call getTasks here 
+    // getTask retrieves an empty task list in case of 
+    // unknown filter
+    dao.getTasks(req.query.filter)
+        .then(tasks => res.json(tasks))
+        .catch( err  => res.status(500).json(err));
 });
 
-// GET /tasls/:id
+
+// GET /tasks/:id
 app.get('/tasks/:id', (req, res) => {
-    // call getTask here 
+    dao.getTask(req.params.id)
+    .then( task => {
+        if(!task)
+            res.status(404).send();
+         else 
+            res.json(task);
+ 
+    }).catch(err => res.status(500).json(err));
 });
 
 // POST /tasks
-app.get('/tasks', (req, res) => {
+app.post('/tasks', (req, res) => {
     // call createTask here 
 });
 
 // DELETE /taks/:id
-app.get('/tasks', (req, res) => {
+app.delete('/tasks/:id', (req, res) => {
     // call deleteTask here 
 });
 
 // PUT /tasks/:id
-app.put('/tasks/:id',
-    [
+app.put('/tasks/:id', [
         check("priv").isBoolean(),
         check("important").isBoolean(),
         check("completed").isBoolean(),
         check("description").isLength({ 'min': 1 }),
         check("deadline").isDate({ format: 'YYYY-MM-DD', strictMode: true })
     ],
-    (req, res) => {
+     (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(422).json({ errors: errors.array() });
