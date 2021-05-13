@@ -35,13 +35,27 @@ app.get('/tasks/:id', (req, res) => {
 });
 
 // POST /tasks
-app.post('/tasks', (req, res) => {
-    // call createTask here 
+app.post('/tasks', [
+    check("priv").isBoolean(),
+    check("important").isBoolean(),
+    check("completed").isBoolean(),
+    check("description").isLength({ 'min': 1 }),
+], (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    dao.createTask(req.body)
+    .then(()=>res.status(250).end())
+    .catch(error => res.status(550).json(error))
 });
 
 // DELETE /taks/:id
 app.delete('/tasks/:id', (req, res) => {
-    // call deleteTask here 
+    dao.deleteTask(req.params.id)
+    .then(()=>res.status(250).end())
+    .catch(error => res.status(550).json(error))
 });
 
 // PUT /tasks/:id
