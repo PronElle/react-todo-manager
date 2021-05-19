@@ -18,4 +18,5 @@ async function deleteTask(id){
 
 }
 
-export default { getTasks, addTask, updateTask, deleteTask}; 
+const API = { getTasks, addTask, updateTask, deleteTask}
+export default API; 
