@@ -1,6 +1,5 @@
 import Task from './Task';
 
-
 /* --- week 2 ---- */
 async function getTasks(filter) {
     let url = '/tasks';
@@ -28,7 +27,7 @@ async function updateTask(id){
 }
 
 async function deleteTask(id){
-    // TODO: to be implemented
+  // TODO: to be implemented
 }
 
 const API = { getTasks, addTask, updateTask, deleteTask };

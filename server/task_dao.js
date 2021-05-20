@@ -40,6 +40,7 @@ exports.getTasks = (filter) => {
         let tasks = rows.map( row => createTaskObject(row));
         
         switch(filter){
+          case 'all':
           case undefined: // no filter passed
             break;
           case "private":

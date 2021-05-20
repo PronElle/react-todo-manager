@@ -25,7 +25,7 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState('all');  
   
-  // component mount 
+  // // component mount 
   // useEffect(() => {
   //   API.getTasks()
   //      .then(tasks => setTodos(tasks))
@@ -35,13 +35,6 @@ function App() {
   // filtering 
   useEffect(() => {
     function filterTodos(){
-      if(filter === 'all')
-        API.getTasks()
-            .then(tasks => {
-              setTodos(tasks);
-            })
-            .catch(); // do smthg here
-      else
         API.getTasks(filter)
            .then(tasks => {
              setTodos(tasks);
@@ -59,7 +52,17 @@ function App() {
     // TODO: to be implemented
   }
 
-  const deleteTodo = (task) => {
+  const deleteTodo = (id) => {
+    // elle's suggestion: 
+    // (feel free to improve)
+    // API.deleteTask(id)
+    //    .then(() => {
+    //       API.getTasks(filter).then(tasks=> {
+    //         setTodos(tasks);
+    //       })
+    //   })
+    //   .catch();
+
     // TODO: to be implemented
   }
 
