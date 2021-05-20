@@ -6,12 +6,14 @@ import TodoControls from './TodoControls';
 
 const Todo = (props) => {
     let {todo} = props;
-
+    
+    // reminder: to persistently change completed/not completed, 
+    // use the onChange event with updateTask 
     return (
       <ListGroup.Item id = {todo.id}>
         <div className="d-flex w-100 justify-content-between ">
           <div className="custom-control custom-checkbox">
-              <input type="checkbox" checked={todo.completed ? 'checked' : '' } className={todo.important ? "custom-control-input important" : "custom-control-input"} id={"check-t" +  todo.id} />
+              <input type="checkbox" defaultChecked={todo.completed} className={todo.important ? "custom-control-input important" : "custom-control-input"} id={"check-t" +  todo.id} />
               <label className="custom-control-label" htmlFor={"check-t" +  todo.id}>{todo.description}</label>
           </div>
           {!todo.priv && (
