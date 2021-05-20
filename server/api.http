@@ -29,3 +29,14 @@ Content-Type: application/json
 ###
 
 GET http://localhost:3001/tasks/18 HTTP/1.1
+
+###
+GET http://localhost:3001/tasks?filter=all HTTP/1.1
+
+
+###
+GET http://localhost:3001/tasks?filter=today HTTP/1.1
+
+
+###
+GET http://localhost:3001/tasks?filter=sevendays HTTP/1.1
