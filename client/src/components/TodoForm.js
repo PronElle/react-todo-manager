@@ -40,7 +40,7 @@ function TodoForm(props) {
 
   return (
     <>
-      {submitted && <Redirect to='/todos'> </Redirect>}
+      {submitted && <Redirect to='/tasks'> </Redirect>}
       <Form>
         <Form.Group controlid='selectedTodo'>
           <Form.Label>ToDo</Form.Label>
@@ -64,7 +64,7 @@ function TodoForm(props) {
         <Form.Group controlid="formBasicCheckbox">
           <Form.Check type="checkbox" label="Private" value={priv} checked={priv ? 'checked' : ''} onChange={() => setPriv(!priv)} />
         </Form.Group>
-        <Button variant='success' onClick={handleSumbit} >Save</Button> <Link to = '/todos'>  <Button variant='secondary' onClick={props.cancel}>Cancel</Button></Link>
+        <Button variant='success' onClick={handleSumbit} >Save</Button> <Link to = '/tasks'>  <Button variant='secondary' onClick={props.cancel}>Cancel</Button></Link>
       </Form>
     </>
   );

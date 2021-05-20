@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // react-bootstrap
 import { Container, Button, Row, Col, Collapse } from 'react-bootstrap';
 
@@ -8,10 +8,10 @@ import NavBar from './components/NavBar';
 import Filters from './components/Filters';
 import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
-import dayjs from 'dayjs';
+import API from './api/api';
+
 import { Switch, Route, Link, withRouter, Redirect } from 'react-router-dom';
 
-import API from './api/api';
 
 // mapping between filter class and filter name
 let filters = {
@@ -26,61 +26,36 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState('all');  
   
-  /**
-   * retrieves todos filtered
-   * with provided filter 
-   * @param {*} filter criteria 
-   */
-  const getFilteredTodos = (filter) => {
-    // no reason to switch
-    if(filter == "all"){
-      API.getTasks()
-         .then( tasks => { 
-           setTodos(tasks);
-           setFilter('all'); 
-          })
-         .catch(); // do something here
-    }else{
-      API.getTasks(filter)
-         .then( tasks => {
-           setTodos(tasks);
-           setFilter(filter);
-         })
-         .catch(); // do smthg here
-    }
-  }
-
-  addTodo = (task) => {
-    API.addTask(task)
-       .then(() => {
-         // trick: after update, update states also
-         API.getTasks().then( tasks => {
-           setTodos(tasks);
-           setFilter('all');
-         });
-       })
+  // component mount 
+  useEffect(() => {
+    API.getTasks()
+       .then(tasks => setTodos(tasks))
        .catch(); // do smthg here
+  }, []);
+
+  const addTodo = (task) => {
+    // TODO: to be implemented
   }
 
-  updateTodo = (task) => {
-
+  const updateTodo = (task) => {
+    // TODO: to be implemented
   }
 
-  // deleteTask
-  deleteTodo = (task) => {
-
+  const deleteTodo = (task) => {
+    // TODO: to be implemented
   }
+
 
   return (
     <>
       <Container fluid>
         <NavBar />
         <Switch>
-          <Route path="/todos">
+          <Route path="/tasks">
             <Row className="vheight-100">
               <Switch>
 
-                <Route path="/todos/:filter"  render={({match}) => {
+                <Route path="/tasks/:filter"  render={({match}) => {
                           // to protect from invalid urls (e.g. /todos/foo)
                     return filters[match.params.filter]  ? 
                      <>
@@ -92,11 +67,11 @@ function App() {
                       
                       <Col sm={8} className="below-nav"> 
                         <h1>{filters[filter]}</h1>
-                        <TodoList todos = {getFilteredTodos(match.params.filter)} addTodo={addTodo} deleteTodo={deleteTodo} />
+                        <TodoList todos = {todos} addTodo={addTodo} deleteTodo={deleteTodo} />
                         <Link to = "/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
                       </Col>
                       </> 
-                      : <Redirect to='/todos'/>;
+                      : <Redirect to='/tasks'/>;
                 }}/> 
 
                 <Route render={() => {
@@ -134,11 +109,11 @@ function App() {
               <TodoForm todos = {todos} 
                 todo = {todoToEdit}
                 addOrEditTodo={ updateTodo} />
-            </Col> : <Redirect to='/todos'/>; 
+            </Col> : <Redirect to='/tasks'/>; 
           }}/>
           
           <Route>
-            <Redirect to='/todos'/>
+            <Redirect to='/tasks'/>
           </Route>
       
         </Switch>          
