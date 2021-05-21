@@ -18,32 +18,24 @@ async function getTasks(filter) {
 }
 
 async function addTask(task) {
-    const url = 'http://localhost:3000';
-    const response = await fetch(url + '/tasks', { // this is the body of request where to put data
+    const response = await fetch('/tasks', { 
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...task, private: task.priv })
+        body: JSON.stringify(task)
     });
-    if (response.ok) {
-        return null; // here we are adding an exam to the server so there is no response
-    } else return { 'err': 'POST error' };
+
+    return response.ok ? null : { 'err': 'POST error' };
 }
 
 /* --- week 3 --- */
 async function updateTask(task) {
-    const url = 'http://localhost:3000';
-
-    const response = await fetch(url + '/tasks/' + task.id, { // populate request with data
+    const response = await fetch('/tasks/' + task.id, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...task, private: task.priv})
+        body: JSON.stringify(task)
     });
     
-    if (response.ok) {
-        return null; // here we are adding an exam to the server so there is no response
-    } else return { 'err': 'POST error' };
-
-    // TODO: to be implemented
+    return response.ok ? null : { 'err': 'PUT error' };
 }
 
 async function deleteTask(id) {

@@ -19,7 +19,7 @@ const createTaskObject = (row) => {
 // create task
 exports.createTask = (task) => {
   return new Promise((resolve, reject) => {
-      const query = 'INSERT INTO tasks(description, important, private, deadline, completed, user) VALUES(?,?,?, DATETIME(?),?,?)';
+      const query = 'INSERT INTO tasks(description, important, private, deadline, completed, user) VALUES(?,?,?, ?,?,?)';
       db.run(query, [task.description, task.important, task.priv, task.deadline, task.completed, task.user],  function (err) {
           if(err)
               reject(err);
@@ -99,7 +99,7 @@ exports.deleteTask = (id) => {
 // update task
 exports.updateTask = (id, task) => {
    return new Promise((resolve, reject) => {
-     const query = 'UPDATE tasks SET description=?,important=?,private=?, deadline = DATETIME(?), completed=?,user=? WHERE id = ?';
+     const query = 'UPDATE tasks SET description=?,important=?,private=?, deadline = ?, completed=?,user=? WHERE id = ?';
      // employs param id to avoid using the new task's one (might be different)
      db.run(query, [task.description, task.important, task.priv, task.deadline, task.completed, task.user, id], function (err) {
        if (err) {

@@ -44,25 +44,23 @@ function App() {
     filterTodos(filter);
   }, [filter]);
 
-  const addTodo = (task) => {
-    
-    API.addTask(task)
-    .then(() => {
-      API.getTasks().then((tasks) => setTodos(tasks))
-    })
-    .catch();
-
+  const addOrEditTodo = (task) => {
+    if(task.id){
+      API.updateTask(task)
+      .then(() => {
+        API.getTasks().then((tasks) => setTodos(tasks))
+      })
+      .catch();
+    }else{
+      API.addTask(task)
+        .then(() => {
+          API.getTasks().then((tasks) => setTodos(tasks))
+        })
+        .catch();
+    }
   }
 
-  const updateTodo = (task) => {
 
-    API.updateTask(task)
-    .then(() => {
-      API.getTasks().then((tasks) => setTodos(tasks))
-    })
-    .catch();
-    
-  }
 
   const deleteTodo = (id) => {
     // elle's suggestion: 
@@ -100,7 +98,7 @@ function App() {
 
                       <Col sm={8} className="below-nav">
                         <h1>{filters[filter]}</h1>
-                        <TodoList todos={todos} addTodo={addTodo} deleteTodo={deleteTodo} />
+                        <TodoList todos={todos} deleteTodo={deleteTodo} />
                         <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
                       </Col>
                     </>
@@ -130,7 +128,7 @@ function App() {
           <Route path="/add">
             <Col sm={8} className="below-nav">
               <TodoForm todos={todos}
-                addOrEditTodo={addTodo} />
+                addOrEditTodo={addOrEditTodo} />
             </Col>
           </Route>
 
@@ -141,7 +139,7 @@ function App() {
             return todoToEdit ? <Col sm={8} className="below-nav">
               <TodoForm todos={todos}
                 todo={todoToEdit}
-                addOrEditTodo={updateTodo} />
+                addOrEditTodo={addOrEditTodo} />
             </Col> : <Redirect to='/tasks' />;
           }} />
 
