@@ -18,8 +18,8 @@ const createTaskObject = (row) => {
 
 // create task
 exports.createTask = (task) => {
-  // "?" to protect from undefined
-  task.deadline = dayjs(task.deadline)?.format("YYYY-MM-DD HH:mm");
+  if(task.deadline) // protect from undefined
+      task.deadline = dayjs(task.deadline).format("YYYY-MM-DD HH:mm");
 
   return new Promise((resolve, reject) => {
       const query = 'INSERT INTO tasks(description, important, private, deadline, completed, user) VALUES(?,?,?,?,?,?)';
@@ -101,8 +101,8 @@ exports.deleteTask = (id) => {
 
 // update task
 exports.updateTask = (id, task) => {
-    // "?" to protect from undefined
-   task.deadline = dayjs(task.deadline)?.format("YYYY-MM-DD HH:mm");
+  if(task.deadline) // protect from undefined
+    task.deadline = dayjs(task.deadline).format("YYYY-MM-DD HH:mm");
 
    return new Promise((resolve, reject) => {
      const query = 'UPDATE tasks SET description=?,important=?,private=?, deadline = ?, completed=?,user=? WHERE id = ?';
