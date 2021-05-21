@@ -1,6 +1,7 @@
 {
   "name": "biglab2",
   "version": "0.1.0",
+  "proxy": "http://localhost:3001",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.10",
@@ -16,7 +17,6 @@
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.1"
   },
-  "proxy": "http://localhost:3001",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

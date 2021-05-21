@@ -60,20 +60,15 @@ function App() {
     }
   }
 
-
-
+  
   const deleteTodo = (id) => {
-    // elle's suggestion: 
-    // (feel free to improve)
-    // API.deleteTask(id)
-    //    .then(() => {
-    //       API.getTasks(filter).then(tasks=> {
-    //         setTodos(tasks);
-    //       })
-    //   })
-    //   .catch();
-
-    // TODO: to be implemented
+    API.deleteTask(id)
+       .then(() => {
+          API.getTasks(filter).then(tasks=> {
+            setTodos(tasks);
+          })
+      })
+      .catch();
   }
 
 
@@ -98,7 +93,7 @@ function App() {
 
                       <Col sm={8} className="below-nav">
                         <h1>{filters[filter]}</h1>
-                        <TodoList todos={todos} deleteTodo={deleteTodo} />
+                        <TodoList todos={todos} updateTodo={addOrEditTodo}  deleteTodo={deleteTodo} />
                         <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
                       </Col>
                     </>
@@ -115,7 +110,7 @@ function App() {
 
                     <Col sm={8} className="below-nav">
                       <h1>{filters[filter]}</h1>
-                      <TodoList todos={todos} deleteTodo={deleteTodo} />
+                      <TodoList todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
                       <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
                     </Col>
                   </>;
