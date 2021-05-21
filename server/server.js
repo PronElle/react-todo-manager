@@ -64,7 +64,6 @@ app.put('/tasks/:id', [
         check("important").isBoolean(),
         check("completed").isBoolean(),
         check("description").isLength({ 'min': 1 }),
-        check("deadline").isDate({ format: 'YYYY-MM-DD', strictMode: true })
     ],
      (req, res) => {
         const errors = validationResult(req);

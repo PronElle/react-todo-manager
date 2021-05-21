@@ -12,7 +12,7 @@ function TodoForm(props) {
   const [time, setTime] = useState(props.todo ? props.todo.deadline?.format('hh:mm'): '');
   const [important, setImportant] = useState(props.todo ? props.todo.important : false); // for important
   const [priv, setPriv] = useState(props.todo? props.todo.priv : false); // for private
-  
+  const [completed, setCompleted] = useState(props.todo? props.todo.completed : false );
 
   const [errorMessage, setErrorMessage] = useState();
   const [submitted, setSubmitted] = useState(false)
@@ -29,8 +29,10 @@ function TodoForm(props) {
         description: description, 
         important: important, 
         priv: priv, 
-        deadline: date && time ? dayjs(date + time) : undefined
-      };  
+        deadline: date && time ? dayjs(date + time) : undefined,
+        completed: completed,
+        user: 1
+      }; 
 
       props.addOrEditTodo(todo);
       setSubmitted(true);
