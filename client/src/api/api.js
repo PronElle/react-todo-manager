@@ -18,7 +18,15 @@ async function getTasks(filter) {
 }
 
 async function addTask(task) {
-    // TODO: to be implemented
+    const url = 'http://localhost:3000';
+    const response = await fetch(url + '/tasks', { // this is the body of request where to put data
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...task, private: task.priv })
+    });
+    if (response.ok) {
+        return null; // here we are adding an exam to the server so there is no response
+    } else return { 'err': 'POST error' };
 }
 
 /* --- week 3 --- */

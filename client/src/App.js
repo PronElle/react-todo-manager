@@ -45,7 +45,13 @@ function App() {
   }, [filter]);
 
   const addTodo = (task) => {
-    // TODO: to be implemented
+    
+    API.addTask(task)
+    .then(() => {
+      API.getTasks().then((tasks) => setTodos(tasks))
+    })
+    .catch();
+
   }
 
   const updateTodo = (task) => {
