@@ -24,15 +24,8 @@ let filters = {
 function App() {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState('all');
-  
-  // component mount 
- // useEffect(() => {
-  //  API.getTasks()
-  //    .then(tasks => setTodos(tasks))
-  //    .catch(); // do smthg here
-  //}, []);
 
-  // filtering 
+  // mount and filtering 
   useEffect(() => {
     function filterTodos() {
       API.getTasks(filter)
@@ -44,6 +37,13 @@ function App() {
     filterTodos(filter);
   }, [filter]);
 
+  /**
+   * adds or edits a task:
+   *  if the passed task an id, then it
+   *  must be updated, otherwise it must be
+   * created
+   * @param {*} task 
+   */
   const addOrEditTodo = (task) => {
     if(task.id){
       API.updateTask(task)
@@ -60,7 +60,10 @@ function App() {
     }
   }
 
-  
+  /**
+   * deletes a task according to the id
+   * @param {*} id 
+   */
   const deleteTodo = (id) => {
     API.deleteTask(id)
        .then(() => {
@@ -127,7 +130,7 @@ function App() {
             </Col>
           </Route>
 
-          <Route exact path='/update/:id' render={({ match }) => {
+          <Route path='/update/:id' render={({ match }) => {
             // eslint-disable-next-line 
             const todoToEdit = todos.find(t => t.id == match.params.id);
             // to protect from invalid urls (e.g. /update/foo)           

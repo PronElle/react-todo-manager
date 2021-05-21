@@ -11,9 +11,7 @@ const Todo = (props) => {
       task.completed = ev.target.checked;
       props.updateTodo(task)
     }
-    
-    // reminder: to persistently change completed/not completed, 
-    // use the onChange event with updateTask 
+  
     return (
       <ListGroup.Item id = {todo.id}>
         <div className="d-flex w-100 justify-content-between ">

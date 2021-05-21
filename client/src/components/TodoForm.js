@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import { Link, Redirect } from 'react-router-dom';
+import Modal from 'react-bootstrap/Modal';
 
 function TodoForm(props) {
 
@@ -41,34 +42,44 @@ function TodoForm(props) {
       setErrorMessage('Please add a valid ToDo');
   }
 
+
   return (
     <>
-      {submitted && <Redirect to='/tasks'> </Redirect>}
-      <Form>
-        <Form.Group controlid='selectedTodo'>
-          <Form.Label>ToDo</Form.Label>
-          <Form.Control type='text' value={description} onChange={ev => setDescription(ev.target.value)}>
-          </Form.Control>
-          <span style={{ color: 'red' }}>{errorMessage}</span>
-        </Form.Group>
-        <Form.Group controlid='deadline-date'>
-          <Form.Label>Deadline</Form.Label>
-          <Form.Control type='date'  value={date ? date: ""} onChange={ev => setDate(ev.target.value)} />
-        </Form.Group>
+     {submitted && <Redirect to='/tasks'> </Redirect>}
+      <Modal show={!submitted} animation={false}>
+        <Form>
+          <Modal.Body>
+            <Form.Group controlid='selectedTodo'>
+              <Form.Label>ToDo</Form.Label>
+              <Form.Control type='text' value={description} onChange={ev => setDescription(ev.target.value)}></Form.Control>
+              <span style={{ color: 'red' }}>{errorMessage}</span>
+            </Form.Group>
 
-        <Form.Group controlId="deadline-time">
-          <Form.Label>Time</Form.Label>
-          <Form.Control type="time"  value={time? time : ""} onChange={ev => setTime(ev.target.value)}/>
-        </Form.Group>
+            <Form.Group controlid='deadline-date'>
+              <Form.Label>Deadline</Form.Label>
+              <Form.Control type='date'  value={date ? date: ""} onChange={ev => setDate(ev.target.value)} />
+            </Form.Group>
 
-        <Form.Group controlid="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Important" value={important} checked={important? 'checked' : ''} onChange={() => setImportant(!important)} />
-        </Form.Group>
-        <Form.Group controlid="formBasicCheckbox">
-          <Form.Check type="checkbox" label="Private" value={priv} checked={priv ? 'checked' : ''} onChange={() => setPriv(!priv)} />
-        </Form.Group>
-        <Button variant='success' onClick={handleSumbit} >Save</Button> <Link to = '/tasks'>  <Button variant='secondary' onClick={props.cancel}>Cancel</Button></Link>
-      </Form>
+            <Form.Group controlId="deadline-time">
+              <Form.Label>Time</Form.Label>
+              <Form.Control type="time"  value={time? time : ""} onChange={ev => setTime(ev.target.value)}/>
+            </Form.Group>
+
+            <Form.Group controlid="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Important" value={important} checked={important? 'checked' : ''} onChange={() => setImportant(!important)} />
+            </Form.Group>
+
+            <Form.Group controlid="formBasicCheckbox">
+              <Form.Check type="checkbox" label="Private" value={priv} checked={priv ? 'checked' : ''} onChange={() => setPriv(!priv)} />
+            </Form.Group>
+
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant='success' onClick={handleSumbit} >Save</Button> <Link to = '/tasks'>  <Button variant='secondary'>Cancel</Button></Link>
+          </Modal.Footer>
+        </Form>
+      </Modal>
     </>
   );
 }
