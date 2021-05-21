@@ -9,7 +9,7 @@ function TodoForm(props) {
   // todo attributes' hooks
   const [description, setDescription] = useState(props.todo? props.todo.description:'');
   const [date, setDate] = useState(props.todo ? props.todo.deadline?.format('YYYY-MM-DD'): '');
-  const [time, setTime] = useState(props.todo ? props.todo.deadline?.format('hh:mm'): '');
+  const [time, setTime] = useState(props.todo ? props.todo.deadline?.format('HH:mm'): '');
   const [important, setImportant] = useState(props.todo ? props.todo.important : false); // for important
   const [priv, setPriv] = useState(props.todo? props.todo.priv : false); // for private
   const [completed, setCompleted] = useState(props.todo? props.todo.completed : false );
@@ -24,8 +24,9 @@ function TodoForm(props) {
     if (description.trim() !== '') {
       // ToDos with unspecified date or time are added with undefined date
       const todo = { 
-        // if editing, keep the id otherwise increase the last one
-        id: props.todo ? props.todo.id : props.todos.length > 0 ? props.todos.slice(-1)[0].id + 1 : 1, 
+        // if undefined, it means we are creating a task
+        // addOrEdit will take care of generating the id from API
+        id: props.todo ? props.todo.id : undefined, 
         description: description, 
         important: important, 
         priv: priv, 
