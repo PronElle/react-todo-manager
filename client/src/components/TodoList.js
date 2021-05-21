@@ -7,7 +7,7 @@ const TodoList = (props) => {
     <>
       {props.todos &&
         <ListGroup as="ul" variant="flush">
-          {props.todos.map(todo => <Todo key={todo.id} todo={todo} deletetodo={props.deleteTodo} />)}
+          {props.todos.map(todo => <Todo key={todo.id} todo={todo} updateTodo={props.updateTodo} deletetodo={props.deleteTodo} />)}
         </ListGroup>}
     </>
 
