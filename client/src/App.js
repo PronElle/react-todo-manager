@@ -14,43 +14,53 @@ import { Switch, Route, Link, withRouter, Redirect } from 'react-router-dom';
 
 // mapping between filter class and filter name
 let filters = {
-  'all': 'All', 
-  'important':'Important', 
-  'today': 'Today', 
+  'all': 'All',
+  'important': 'Important',
+  'today': 'Today',
   'sevendays': 'Next 7 Days',
   'private': 'Private'
 };
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [filter, setFilter] = useState('all');  
+  const [filter, setFilter] = useState('all');
   
-  // // component mount 
-  // useEffect(() => {
-  //   API.getTasks()
-  //      .then(tasks => setTodos(tasks))
-  //      .catch(); // do smthg here
-  // }, []);
+  // component mount 
+ // useEffect(() => {
+  //  API.getTasks()
+  //    .then(tasks => setTodos(tasks))
+  //    .catch(); // do smthg here
+  //}, []);
 
   // filtering 
   useEffect(() => {
-    function filterTodos(){
-        API.getTasks(filter)
-           .then(tasks => {
-             setTodos(tasks);
-           })
-           .catch() // do smthg here
+    function filterTodos() {
+      API.getTasks(filter)
+        .then(tasks => {
+          setTodos(tasks);
+        })
+        .catch() // do smthg here
     };
     filterTodos(filter);
   }, [filter]);
 
-  const addTodo = (task) => {
-    // TODO: to be implemented
+  const addOrEditTodo = (task) => {
+    if(task.id){
+      API.updateTask(task)
+      .then(() => {
+        API.getTasks().then((tasks) => setTodos(tasks))
+      })
+      .catch();
+    }else{
+      API.addTask(task)
+        .then(() => {
+          API.getTasks().then((tasks) => setTodos(tasks))
+        })
+        .catch();
+    }
   }
 
-  const updateTodo = (task) => {
-    // TODO: to be implemented
-  }
+
 
   const deleteTodo = (id) => {
     // elle's suggestion: 
@@ -76,68 +86,68 @@ function App() {
             <Row className="vheight-100">
               <Switch>
 
-                <Route path="/tasks/:filter"  render={({match}) => {
-                          // to protect from invalid urls (e.g. /todos/foo)
-                    return filters[match.params.filter]  ? 
-                     <>
-                     <Collapse>
-                        <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
-                          <Filters setFilter={setFilter} activeFilter = {match.params.filter}/>
-                        </Col>
-                      </Collapse>
-                      
-                      <Col sm={8} className="below-nav"> 
-                        <h1>{filters[filter]}</h1>
-                        <TodoList todos = {todos} addTodo={addTodo} deleteTodo={deleteTodo} />
-                        <Link to = "/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
-                      </Col>
-                      </> 
-                      : <Redirect to='/tasks'/>;
-                }}/> 
-
-                <Route render={() => {
-                    return <>
+                <Route path="/tasks/:filter" render={({ match }) => {
+                  // to protect from invalid urls (e.g. /tasks/foo)
+                  return filters[match.params.filter] ?
+                    <>
                       <Collapse>
                         <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
-                          <Filters setFilter={setFilter} activeFilter = "all"/>
+                          <Filters setFilter={setFilter} activeFilter={match.params.filter} />
                         </Col>
                       </Collapse>
 
-                      <Col sm={8} className="below-nav"> 
+                      <Col sm={8} className="below-nav">
                         <h1>{filters[filter]}</h1>
-                        <TodoList todos = {todos} deleteTodo={deleteTodo} />
-                        <Link to = "/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
-                      </Col>  
-                    </>;
-                }}/>
-                    
+                        <TodoList todos={todos} deleteTodo={deleteTodo} />
+                        <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
+                      </Col>
+                    </>
+                    : <Redirect to='/tasks' />;
+                }} />
+
+                <Route render={() => {
+                  return <>
+                    <Collapse>
+                      <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
+                        <Filters setFilter={setFilter} activeFilter="all" />
+                      </Col>
+                    </Collapse>
+
+                    <Col sm={8} className="below-nav">
+                      <h1>{filters[filter]}</h1>
+                      <TodoList todos={todos} deleteTodo={deleteTodo} />
+                      <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
+                    </Col>
+                  </>;
+                }} />
+
               </Switch>
             </Row>
           </Route>
-          
+
           <Route path="/add">
-            <Col sm={8} className="below-nav"> 
+            <Col sm={8} className="below-nav">
               <TodoForm todos={todos}
-                addOrEditTodo={addTodo} />
+                addOrEditTodo={addOrEditTodo} />
             </Col>
           </Route>
 
-          <Route exact path='/update/:id' render={({match}) => {
+          <Route exact path='/update/:id' render={({ match }) => {
             // eslint-disable-next-line 
             const todoToEdit = todos.find(t => t.id == match.params.id);
-                   // to protect from invalid urls (e.g. /update/foo)           
-            return todoToEdit ? <Col sm={8} className="below-nav"> 
-              <TodoForm todos = {todos} 
-                todo = {todoToEdit}
-                addOrEditTodo={ updateTodo} />
-            </Col> : <Redirect to='/tasks'/>; 
-          }}/>
-          
+            // to protect from invalid urls (e.g. /update/foo)           
+            return todoToEdit ? <Col sm={8} className="below-nav">
+              <TodoForm todos={todos}
+                todo={todoToEdit}
+                addOrEditTodo={addOrEditTodo} />
+            </Col> : <Redirect to='/tasks' />;
+          }} />
+
           <Route>
-            <Redirect to='/tasks'/>
+            <Redirect to='/tasks' />
           </Route>
-      
-        </Switch>          
+
+        </Switch>
       </Container>
     </>
   );

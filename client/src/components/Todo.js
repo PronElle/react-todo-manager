@@ -24,7 +24,7 @@ const Todo = (props) => {
           }
            
             <div>
-            <small>{todo.deadline?.isSame(dayjs(), 'day') ? "Today at " : todo.deadline?.format('dddd, DD/MM/YYYY ')}{todo.deadline?.format('hh:mm:ss A')} </small>
+            <small>{todo.deadline?.isSame(dayjs(), 'day') ? "Today at " : todo.deadline?.format('dddd, DD/MM/YYYY ')}{todo.deadline?.format('hh:mm A')} </small>
               <TodoControls todo={props.todo} deletetodo={props.deletetodo}/>
             </div>         
         </div>

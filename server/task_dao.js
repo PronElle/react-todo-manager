@@ -2,7 +2,7 @@
 
 const sqlite = require('sqlite3').verbose();
 const Task = require('./task');
-
+const dayjs = require('dayjs');
 const DBNAME = './tasks.db'
 
 // open the database
@@ -18,8 +18,11 @@ const createTaskObject = (row) => {
 
 // create task
 exports.createTask = (task) => {
+  // "?" to protect from undefined
+  task.deadline = dayjs(task.deadline)?.format("YYYY-MM-DD HH:mm");
+
   return new Promise((resolve, reject) => {
-      const query = 'INSERT INTO tasks(description, important, private, deadline, completed, user) VALUES(?,?,?, DATETIME(?),?,?)';
+      const query = 'INSERT INTO tasks(description, important, private, deadline, completed, user) VALUES(?,?,?,?,?,?)';
       db.run(query, [task.description, task.important, task.priv, task.deadline, task.completed, task.user],  function (err) {
           if(err)
               reject(err);
@@ -98,12 +101,14 @@ exports.deleteTask = (id) => {
 
 // update task
 exports.updateTask = (id, task) => {
+    // "?" to protect from undefined
+   task.deadline = dayjs(task.deadline)?.format("YYYY-MM-DD HH:mm");
+
    return new Promise((resolve, reject) => {
-     const query = 'UPDATE tasks SET description=?,important=?,private=?, deadline = DATETIME(?), completed=?,user=? WHERE id = ?';
+     const query = 'UPDATE tasks SET description=?,important=?,private=?, deadline = ?, completed=?,user=? WHERE id = ?';
      // employs param id to avoid using the new task's one (might be different)
      db.run(query, [task.description, task.important, task.priv, task.deadline, task.completed, task.user, id], function (err) {
        if (err) {
-         console.log(err);
          reject(err);
          return;
        }
