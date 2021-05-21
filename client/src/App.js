@@ -60,20 +60,15 @@ function App() {
     }
   }
 
-
-
+  
   const deleteTodo = (id) => {
-    // elle's suggestion: 
-    // (feel free to improve)
-    // API.deleteTask(id)
-    //    .then(() => {
-    //       API.getTasks(filter).then(tasks=> {
-    //         setTodos(tasks);
-    //       })
-    //   })
-    //   .catch();
-
-    // TODO: to be implemented
+    API.deleteTask(id)
+       .then(() => {
+          API.getTasks(filter).then(tasks=> {
+            setTodos(tasks);
+          })
+      })
+      .catch();
   }
 
 

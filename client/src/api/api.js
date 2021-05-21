@@ -39,7 +39,14 @@ async function updateTask(task) {
 }
 
 async function deleteTask(id) {
-    // TODO: to be implemented
+    return new Promise((resolve, reject) => {
+        fetch("/tasks/" + id, {
+            method: 'DELETE'
+        }).then( response => {
+            if(response.ok) 
+                resolve(null);
+        }).catch( err => reject({'err': 'DELETE error'})); // connection errors
+    });
 }
 
 const API = { getTasks, addTask, updateTask, deleteTask };
