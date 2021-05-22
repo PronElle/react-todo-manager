@@ -45,16 +45,16 @@ function App() {
    * @param {*} task 
    */
   const addOrEditTodo = (task) => {
-    if(task.id){
+    if(task.id){ // edit (the task already has the id)
       API.updateTask(task)
       .then(() => {
-        API.getTasks().then((tasks) => setTodos(tasks))
+        API.getTasks(filter).then((tasks) => setTodos(tasks))
       })
       .catch();
-    }else{
+    }else{ // add (the task doesn't have the id)
       API.addTask(task)
         .then(() => {
-          API.getTasks().then((tasks) => setTodos(tasks))
+          API.getTasks(filter).then((tasks) => setTodos(tasks))
         })
         .catch();
     }
@@ -80,10 +80,10 @@ function App() {
       <Container fluid>
         <NavBar />
         <Switch>
+          {/* route for filters (including "all"/no filter) */}
           <Route path="/tasks">
             <Row className="vheight-100">
               <Switch>
-
                 <Route path="/tasks/:filter" render={({ match }) => {
                   // to protect from invalid urls (e.g. /tasks/foo)
                   return filters[match.params.filter] ?
@@ -122,24 +122,40 @@ function App() {
               </Switch>
             </Row>
           </Route>
+          
+          {/* if no path is matched, then we're editing or adding so filtered tasks
+          are displayed */}
+          <Row className="vheight-100">
+            <Collapse>
+              <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
+                <Filters setFilter={setFilter} activeFilter={filter} />
+              </Col>
+            </Collapse>
 
-          <Route path="/add">
             <Col sm={8} className="below-nav">
-              <TodoForm todos={todos}
-                addOrEditTodo={addOrEditTodo} />
+              <h1>{filters[filter]}</h1>
+              <TodoList todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
             </Col>
-          </Route>
 
-          <Route path='/update/:id' render={({ match }) => {
-            // eslint-disable-next-line 
-            const todoToEdit = todos.find(t => t.id == match.params.id);
-            // to protect from invalid urls (e.g. /update/foo)           
-            return todoToEdit ? <Col sm={8} className="below-nav">
-              <TodoForm todos={todos}
-                todo={todoToEdit}
-                addOrEditTodo={addOrEditTodo} />
-            </Col> : <Redirect to='/tasks' />;
+            {/* TodoForm overlaps (modal)  */}
+            <Route path="/add" render={() => {
+              return <TodoForm  filter={filter} addOrEditTodo={addOrEditTodo} />
+            }} />
+            
+            {/* TodoForm overlaps (modal) */}
+            <Route path='/update/:id' render={({ match }) => {
+              // eslint-disable-next-line 
+              const todoToEdit = todos.find(t => t.id == match.params.id);
+              // to protect from invalid urls (e.g. /update/foo)           
+              return todoToEdit ? <Col sm={8} className="below-nav">
+                <TodoForm filter={filter}
+                  todo={todoToEdit}
+                  addOrEditTodo={addOrEditTodo} />
+              </Col> : <Redirect to='/tasks' />;
           }} />
+          </Row>
+
+ 
 
           <Route>
             <Redirect to='/tasks' />
