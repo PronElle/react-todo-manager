@@ -1,16 +1,15 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 // react-bootstrap
-import { Container, Button, Row, Col, Collapse } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 // components import
 import NavBar from './components/NavBar';
-import Filters from './components/Filters';
-import TodoList from './components/TodoList';
 import TodoForm from './components/TodoForm';
+import TodoPageBody from './components/TodoPageBody'
 import API from './api/api';
 
-import { Switch, Route, Link, withRouter, Redirect } from 'react-router-dom';
+import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 
 // mapping between filter class and filter name
 let filters = {
@@ -37,7 +36,7 @@ function App() {
         .catch() // do smthg here
     };
     filterTodos();
-  }, [todos.length, filter]);
+  }, [filter]);
 
   /**
    * adds or edits a task:
@@ -84,89 +83,56 @@ function App() {
         <Switch>
           {/* route for filters (including "all"/no filter) */}
           <Route path="/tasks">
-            <Row className="vheight-100">
               <Switch>
                 <Route path="/tasks/:filter" render={({ match }) => {
                   // to protect from invalid urls (e.g. /tasks/foo)
                   return filters[match.params.filter] ?
-                    <>
-                      <Collapse>
-                        <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
-                          <Filters setFilter={setFilter} activeFilter={match.params.filter} />
-                        </Col>
-                      </Collapse>
-
-                      <Col sm={8} className="below-nav">
-                        <h1>{filters[filter]}</h1>
-                        <TodoList todos={todos} updateTodo={addOrEditTodo}  deleteTodo={deleteTodo} />
-                        <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
-                      </Col>
-                    </>
+                    <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
+                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
                     : <Redirect to='/tasks' />;
                 }} />
 
                 <Route render={() => {
-                  return <>
-                    <Collapse>
-                      <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
-                        <Filters setFilter={setFilter} activeFilter="all" />
-                      </Col>
-                    </Collapse>
-
-                    <Col sm={8} className="below-nav">
-                      <h1>{filters[filter]}</h1>
-                      <TodoList todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
-                      <Link to="/add"><Button variant="success" size="lg" className="fixed-right-bottom">&#43;</Button></Link>
-                    </Col>
-                  </>;
+                  return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
+                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
                 }} />
 
               </Switch>
-            </Row>
           </Route>
+
           
-          {/* if no path is matched, then we're editing or adding so filtered tasks
-          are displayed */}
-          <Row className="vheight-100">
-            <Collapse>
-              <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
-                <Filters setFilter={setFilter} activeFilter={filter} />
-              </Col>
-            </Collapse>
-
-            <Col sm={8} className="below-nav">
-              <h1>{filters[filter]}</h1>
-              <TodoList todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
-            </Col>
-
-            {/* TodoForm overlaps (modal)  */}
-            <Route path="/add" render={() => {
-              return <TodoForm  filter={filter} addOrEditTodo={addOrEditTodo} />
-            }} />
-            
-            {/* TodoForm overlaps (modal) */}
-            <Route path='/update/:id' render={({ match }) => {
-              // must wait server to load task inside "todos"
-              // if accessed from url
-              if(!loading) {  
-                    // eslint-disable-next-line 
-                const todoToEdit = todos.find(t => t.id == match.params.id);
-                // to protect from invalid urls (e.g. /update/foo)           
-                return todoToEdit ? <Col sm={8} className="below-nav">
+          <Route path="/add" render={() => {
+            return <>
+              <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
+                todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
+              <TodoForm  filter={filter} addOrEditTodo={addOrEditTodo} />
+            </>
+          }} />
+          
+          <Route path='/update/:id' render={({ match }) => {
+            // must wait server to load task inside "todos"
+            // if accessed from url
+            if(!loading) {  
+                  // eslint-disable-next-line 
+              const todoToEdit = todos.find(t => t.id == match.params.id);
+              // to protect from invalid urls (e.g. /update/foo)           
+              return todoToEdit ? 
+                <>
+                  <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
+                      todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
                   <TodoForm filter={filter}
                     todo={todoToEdit}
                     addOrEditTodo={addOrEditTodo} />
-                </Col> : <Redirect to='/tasks' />;
-              }
-          }} />
-          </Row>
-
- 
-
+                </>
+                : <Redirect to='/tasks' />;
+            } 
+          }}/>
+          
+          
           <Route>
             <Redirect to='/tasks' />
           </Route>
-
+        
         </Switch>
       </Container>
     </>
