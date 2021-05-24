@@ -33,7 +33,7 @@ function App() {
           setTodos(tasks);
           setLoading(false);
         })
-        .catch() // do smthg here
+        .catch();
     };
     filterTodos();
   }, [filter]);
@@ -88,13 +88,13 @@ function App() {
                   // to protect from invalid urls (e.g. /tasks/foo)
                   return filters[match.params.filter] ?
                     <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
-                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
+                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
                     : <Redirect to='/tasks' />;
                 }} />
 
                 <Route render={() => {
                   return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
-                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
+                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
                 }} />
 
               </Switch>
@@ -104,8 +104,8 @@ function App() {
           <Route path="/add" render={() => {
             return <>
               <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
-                todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
-              <TodoForm  filter={filter} addOrEditTodo={addOrEditTodo} />
+                todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
+              <TodoForm  filter={filter} addOrEditTodo={addOrEditTodo}  />
             </>
           }} />
           
@@ -119,7 +119,7 @@ function App() {
               return todoToEdit ? 
                 <>
                   <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
-                      todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
+                      todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
                   <TodoForm filter={filter}
                     todo={todoToEdit}
                     addOrEditTodo={addOrEditTodo} />
