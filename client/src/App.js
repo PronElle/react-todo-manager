@@ -8,7 +8,7 @@ import NavBar from './components/NavBar';
 import TodoForm from './components/TodoForm';
 import TodoPageBody from './components/TodoPageBody'
 import API from './api/api';
-
+import { LoginForm, LogoutButton } from './components/LoginComponent';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 
 // mapping between filter class and filter name
@@ -24,6 +24,28 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
+  
+  ////////////////////////////////////////////////////////////////
+  /* ---Login Related States ---- */
+  const [message, setMessage] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false); // at the beginning, no user is logged in
+
+  /* --- To check Authentication after first mount ---- */
+  useEffect(()=> {
+    const checkAuth = async() => {
+      try {
+        // here you have the user info, if already logged in
+        // TODO: store them somewhere and use them, if needed
+        await API.getUserInfo();
+        setLoggedIn(true);
+      } catch(err) {
+        console.error(err.error);
+      }
+    };
+    checkAuth();
+  }, []);
+//////////////////////////////////////////////////////////////////
+
 
   // mount and filtering 
   useEffect(() => {
@@ -46,13 +68,13 @@ function App() {
    * @param {*} task 
    */
   const addOrEditTodo = (task) => {
-    if(task.id){ // edit (the task already has the id)
+    if (task.id) { // edit (the task already has the id)
       API.updateTask(task)
-      .then(() => {
-        API.getTasks(filter).then((tasks) => setTodos(tasks))
-      })
-      .catch();
-    }else{ // add (the task doesn't have the id)
+        .then(() => {
+          API.getTasks(filter).then((tasks) => setTodos(tasks))
+        })
+        .catch();
+    } else { // add (the task doesn't have the id)
       API.addTask(task)
         .then(() => {
           API.getTasks(filter).then((tasks) => setTodos(tasks))
@@ -67,13 +89,25 @@ function App() {
    */
   const deleteTodo = (id) => {
     API.deleteTask(id)
-       .then(() => {
-          API.getTasks(filter).then(tasks=> {
-            setTodos(tasks);
-          })
+      .then(() => {
+        API.getTasks(filter).then(tasks => {
+          setTodos(tasks);
+        })
       })
       .catch();
   }
+
+  /* --- Function to Call The Api to do login with server verification ---- */
+  const doLogIn = async (credentials) => {
+    try {
+      const user = await API.logIn(credentials);
+      setLoggedIn(true);
+      setMessage({ msg: `Welcome, ${user}!`, type: 'success' });
+    } catch (err) {
+      setMessage({ msg: err, type: 'danger' });
+    }
+  }
+///////////////////////////////////////////////
 
 
   return (
@@ -81,58 +115,62 @@ function App() {
       <Container fluid>
         <NavBar />
         <Switch>
+          {/* Is the Route at the correct place ? */}
+          <Route path="/login" render={() =>
+            <>{loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={doLogIn} />}</>
+          } />
           {/* route for filters (including "all"/no filter) */}
           <Route path="/tasks">
-              <Switch>
-                <Route path="/tasks/:filter" render={({ match }) => {
-                  // to protect from invalid urls (e.g. /tasks/foo)
-                  return filters[match.params.filter] ?
-                    <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
-                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
-                    : <Redirect to='/tasks' />;
-                }} />
+            <Switch>
+              <Route path="/tasks/:filter" render={({ match }) => {
+                // to protect from invalid urls (e.g. /tasks/foo)
+                return filters[match.params.filter] ?
+                  <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
+                    todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+                  : <Redirect to='/tasks' />;
+              }} />
 
-                <Route render={() => {
-                  return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
-                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
-                }} />
+              <Route render={() => {
+                return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
+                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+              }} />
 
-              </Switch>
+            </Switch>
           </Route>
 
-          
+
           <Route path="/add" render={() => {
             return <>
               <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
-                todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
-              <TodoForm  filter={filter} addOrEditTodo={addOrEditTodo}  />
+                todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+              <TodoForm filter={filter} addOrEditTodo={addOrEditTodo} />
             </>
           }} />
-          
+
           <Route path='/update/:id' render={({ match }) => {
             // must wait server to load task inside "todos"
             // if accessed from url
-            if(!loading) {  
-                  // eslint-disable-next-line 
+            if (!loading) {
+              // eslint-disable-next-line 
               const todoToEdit = todos.find(t => t.id == match.params.id);
               // to protect from invalid urls (e.g. /update/foo)           
-              return todoToEdit ? 
+              return todoToEdit ?
                 <>
                   <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
-                      todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading}/>
+                    todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
                   <TodoForm filter={filter}
                     todo={todoToEdit}
                     addOrEditTodo={addOrEditTodo} />
                 </>
                 : <Redirect to='/tasks' />;
-            } 
-          }}/>
-          
-          
+            }
+          }} />
+
+
           <Route>
             <Redirect to='/tasks' />
           </Route>
-        
+
         </Switch>
       </Container>
     </>
