@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 // react-bootstrap
-import { Container } from 'react-bootstrap';
+import { Container, Alert, Row } from 'react-bootstrap';
 
 // components import
 import NavBar from './components/NavBar';
@@ -24,27 +24,27 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
-  
+
   ////////////////////////////////////////////////////////////////
   /* ---Login Related States ---- */
   const [message, setMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false); // at the beginning, no user is logged in
 
   /* --- To check Authentication after first mount ---- */
-  useEffect(()=> {
-    const checkAuth = async() => {
+  useEffect(() => {
+    const checkAuth = async () => {
       try {
         // here you have the user info, if already logged in
         // TODO: store them somewhere and use them, if needed
         await API.getUserInfo();
         setLoggedIn(true);
-      } catch(err) {
+      } catch (err) {
         console.error(err.error);
       }
     };
     checkAuth();
   }, []);
-//////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////
 
 
   // mount and filtering 
@@ -56,6 +56,7 @@ function App() {
           setLoading(false);
         })
         .catch();
+
     };
     filterTodos();
   }, [filter]);
@@ -107,36 +108,55 @@ function App() {
       setMessage({ msg: err, type: 'danger' });
     }
   }
-///////////////////////////////////////////////
+
+
+  const doLogOut = async () => {
+    await API.logOut();
+    setLoggedIn(false);
+    // clean up everything
+    setTodos([]);
+  }
+  ///////////////////////////////////////////////
 
 
   return (
     <>
       <Container fluid>
-        <NavBar />
+        <Row>
+          <NavBar />
+          {loggedIn ? <LogoutButton logout={doLogOut} /> : <Redirect to="/login" />}
+        </Row>
+        {message && <Row>
+          <Alert variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>
+        </Row>}
+
         <Switch>
-          {/* Is the Route at the correct place ? */}
           <Route path="/login" render={() =>
             <>{loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={doLogIn} />}</>
           } />
+
           {/* route for filters (including "all"/no filter) */}
-          <Route path="/tasks">
-            <Switch>
-              <Route path="/tasks/:filter" render={({ match }) => {
-                // to protect from invalid urls (e.g. /tasks/foo)
-                return filters[match.params.filter] ?
-                  <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
+          <Route path="/tasks" render={() =>
+            <>
+            {loggedIn ? 
+              <Switch>
+                <Route path="/tasks/:filter" render={({ match }) => {
+                  // to protect from invalid urls (e.g. /tasks/foo)
+                  return filters[match.params.filter] ?
+                    <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
+                      todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+                    : <Redirect to='/tasks' />;
+                }} />
+
+                <Route render={() => {
+                  return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
                     todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
-                  : <Redirect to='/tasks' />;
-              }} />
+                }} />
 
-              <Route render={() => {
-                return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
-                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
-              }} />
-
-            </Switch>
-          </Route>
+              </Switch>
+              : <Redirect to="/login" /> }
+            </>
+          } />
 
 
           <Route path="/add" render={() => {
@@ -174,6 +194,7 @@ function App() {
         </Switch>
       </Container>
     </>
+
   );
 }
 
