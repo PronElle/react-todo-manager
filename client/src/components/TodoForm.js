@@ -31,8 +31,7 @@ function TodoForm(props) {
         important: important, 
         priv: priv, 
         deadline: date && time ? dayjs(date + time) : undefined,
-        completed: completed,
-        user: 1 // temporary
+        completed: completed
       }; 
 
       props.addOrEditTodo(todo);
