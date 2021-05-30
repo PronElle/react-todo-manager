@@ -1,14 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 // react-bootstrap
-import { Container, Alert, Row } from 'react-bootstrap';
+import { Container, Alert } from 'react-bootstrap';
 
 // components import
 import NavBar from './components/NavBar';
 import TodoForm from './components/TodoForm';
 import TodoPageBody from './components/TodoPageBody'
 import API from './api/api';
-import { LoginForm, LogoutButton } from './components/LoginComponent';
+import LoginForm from './components/LoginForm';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 
 // mapping between filter class and filter name
@@ -25,17 +25,14 @@ function App() {
   const [filter, setFilter] = useState('all');
   const [loading, setLoading] = useState(true);
 
-  ////////////////////////////////////////////////////////////////
-  /* ---Login Related States ---- */
   const [message, setMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false); // at the beginning, no user is logged in
 
-  /* --- To check Authentication after first mount ---- */
+
+  // auth after first mount 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // here you have the user info, if already logged in
-        // TODO: store them somewhere and use them, if needed
         await API.getUserInfo();
         setLoggedIn(true);
       } catch (err) {
@@ -44,22 +41,22 @@ function App() {
     };
     checkAuth();
   }, []);
-  //////////////////////////////////////////////////////////////////
 
 
   // mount and filtering 
   useEffect(() => {
     function filterTodos() {
-      API.getTasks(filter)
-        .then(tasks => {
-          setTodos(tasks);
-          setLoading(false);
-        })
-        .catch();
+      if(loggedIn)
+        API.getTasks(filter)
+          .then(tasks => {
+            setTodos(tasks);
+            setLoading(false);
+          })
+          .catch();
 
     };
     filterTodos();
-  }, [filter]);
+  }, [filter, loggedIn]);
 
   /**
    * adds or edits a task:
@@ -98,10 +95,13 @@ function App() {
       .catch();
   }
 
-  /* --- Function to Call The Api to do login with server verification ---- */
-  const doLogIn = async (credentials) => {
+  /**
+   * logs user in and sets proper states
+   * @param {*} credentials 
+   */
+  const login = async (credentials) => {
     try {
-      const user = await API.logIn(credentials);
+      const user = await API.login(credentials);
       setLoggedIn(true);
       setMessage({ msg: `Welcome, ${user}!`, type: 'success' });
     } catch (err) {
@@ -110,30 +110,30 @@ function App() {
   }
 
 
-  const doLogOut = async () => {
-    await API.logOut();
+  /**
+   * logs user out and clears states
+   */
+  const logout = async () => {
+    await API.logout();
     setLoggedIn(false);
-    // clean up everything
+    setMessage('');
     setTodos([]);
   }
-  ///////////////////////////////////////////////
 
 
   return (
     <>
       <Container fluid>
-        <Row>
-          <NavBar />
-          {loggedIn ? <LogoutButton logout={doLogOut} /> : <Redirect to="/login" />}
-        </Row>
-        {message && <Row>
-          <Alert variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>
-        </Row>}
-
+        <NavBar logout={logout} loggedIn={loggedIn}/>
+        {/* UGLY! Find a better placement!! */}
+        {message &&
+           <Alert className="below-nav" variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>
+        }
         <Switch>
-          <Route path="/login" render={() =>
-            <>{loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={doLogIn} />}</>
-          } />
+          <Route path="/login" render={() => {
+              return loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={login} />
+            }
+          }/>
 
           {/* route for filters (including "all"/no filter) */}
           <Route path="/tasks" render={() =>
