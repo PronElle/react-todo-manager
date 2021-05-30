@@ -11,7 +11,6 @@ const db = new sqlite.Database(DBNAME, (err) => {
 });
 
 
-
 const createTaskObject = (row) => {
   return new Task(row.id, row.description, row.important === 1, row.private === 1, row.deadline,row.completed === 1, row.user);
 }
@@ -33,10 +32,10 @@ exports.createTask = (task) => {
 }
 
 // get tasks (optionally filtered)
-exports.getTasks = (filter) => {
+exports.getTasks = (filter, user) => {
   return new Promise((resolve, reject) => {
-    const query = 'SELECT * FROM tasks';
-    db.all(query, [], (err, rows) => {
+    const query = 'SELECT * from tasks where user = ?';
+    db.all(query, [user], (err, rows) => {
       if(err)
         reject(err);
       else{
