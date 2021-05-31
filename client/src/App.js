@@ -11,6 +11,8 @@ import LoginForm from './components/LoginForm';
 
 import API from './api/api';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
+import { UserContext } from './UserContext';
+
 
 // mapping between filter class and filter name
 let filters = {
@@ -24,10 +26,10 @@ let filters = {
 function App() {
   const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState('all');
-  const [loading, setLoading] = useState(true);
 
   const [message, setMessage] = useState('');
   const [loggedIn, setLoggedIn] = useState(false); // at the beginning, no user is logged in
+  const [loading, setLoading] = useState(true);
 
 
   // auth after first mount 
@@ -121,9 +123,9 @@ function App() {
     setTodos([]);
   }
 
-
+  
   return (
-    <>
+    <UserContext.Provider value={loggedIn}>
       <Container fluid>
         <NavBar logout={logout} loggedIn={loggedIn}/>
         {/* UGLY! Find a better placement!! */}
@@ -133,30 +135,31 @@ function App() {
         <Switch>
           <Route path="/login" render={() => {
               return loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={login} />
-            }}/>
+          }}/>
 
           {/* route for filters (including "all"/no filter) */}
-          <Route path="/tasks" render={() => { return loggedIn ? 
+          <Route path="/tasks">
               <Switch>
                 <Route path="/tasks/:filter" render={({ match }) => {
                   // to protect from invalid urls (e.g. /tasks/foo)
-                  return filters[match.params.filter] ?
-                    <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
-                      todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
-                    : <Redirect to='/tasks' />;
+                   if(!loading)
+                    return filters[match.params.filter] ?
+                      <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
+                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+                      : <Redirect to='/tasks' />;
                 }} />
 
                 <Route render={() => {
+                  
                   return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
                     todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
                 }} />
               </Switch>
-              : <Redirect to="/login" /> 
-             
-          }} />
+          </Route> 
 
 
           <Route path="/add" render={() => {
+          if(!loading)
             return <>
               <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
                 todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
@@ -190,8 +193,7 @@ function App() {
 
         </Switch>
       </Container>
-    </>
-
+    </UserContext.Provider>
   );
 }
 

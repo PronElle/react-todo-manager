@@ -1,18 +1,23 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import Filters from './Filters';
 import TodoList from './TodoList';
 import { Button, Col, Row, Collapse } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import { UserContext } from '../UserContext';
+
 
 function TodoPageBody(props) {
     let {setFilter, filter, filters, todos, updateTodo, deleteTodo, loading} = props;    
+    const logged = useContext(UserContext); 
+
     return (
         <Row className="vheight-100">
-            <Collapse>
-                <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
-                <Filters setFilter={setFilter} activeFilter={filter} />
-                </Col>
-            </Collapse>
+        {!logged && <Redirect to='/login'/>}
+        <Collapse>
+            <Col sm={4} bg="light" id="left-sidebar" className="collapse d-sm-block below-nav">
+            <Filters setFilter={setFilter} activeFilter={filter} />
+            </Col>
+        </Collapse>
 
         {!loading ? 
             <Col sm={8} className="below-nav">
@@ -27,7 +32,6 @@ function TodoPageBody(props) {
                 
         }
         </Row>
-     
     );
 }
 

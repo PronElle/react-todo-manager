@@ -1,9 +1,10 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import { Link, Redirect } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
+import { UserContext } from '../UserContext';
 
 function TodoForm(props) {
 
@@ -16,7 +17,7 @@ function TodoForm(props) {
   const [completed] = useState(props.todo? props.todo.completed : false );
 
   const [errorMessage, setErrorMessage] = useState();
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSumbit = (event) => {
     event.preventDefault();
@@ -40,9 +41,10 @@ function TodoForm(props) {
       setErrorMessage('Please add a valid ToDo');
   }
 
-
+  const logged = useContext(UserContext); 
   return (
     <>
+     {!logged && <Redirect to='/login'/>}
      {submitted && <Redirect to={{pathname:'/tasks/'+  props.filter}}> </Redirect>}
       <Modal show={!submitted} size="lg"
         aria-labelledby="contained-modal-title-vcenter"

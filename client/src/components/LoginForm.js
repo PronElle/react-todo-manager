@@ -10,7 +10,6 @@ function LoginForm(props) {
       event.preventDefault();
       setErrorMessage('');
       
-      // SOME VALIDATION, ADD MORE!!!
       if(username.trim() === '' || password.trim() === '' || password.length < 6)
         setErrorMessage('Invalid Username or Password.')
       else{
