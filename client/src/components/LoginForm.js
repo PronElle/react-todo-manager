@@ -1,4 +1,4 @@
-import { Form, Button, Alert, Col} from 'react-bootstrap';
+import { Form, Button, Alert, Card, Row} from 'react-bootstrap';
 import { useState } from 'react';
 
 function LoginForm(props) {
@@ -20,20 +20,29 @@ function LoginForm(props) {
   }
 
   return (
-    <Col>
-    <Form className="below-nav">
-      {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
-      <Form.Group controlId='username'>
-          <Form.Label>email</Form.Label>
-          <Form.Control type='email' value={username} placeholder="email" onChange={ev => setUsername(ev.target.value)} />
-      </Form.Group>
-      <Form.Group controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)} />
-      </Form.Group>
-      <Button variant="primary" type="submit" onClick={handleSubmit}>Login</Button>
-    </Form>
-    </Col>
+    <Row  className="below-nav-center" >
+      <Card border="secondary" className="mx-auto"  style={{width: '440px', height:'400px'}}>
+        <Card.Header className="bg-success">
+          Login
+        </Card.Header>
+        <Card.Body>
+        <Form>
+          {errorMessage ? <Alert variant='danger'>{errorMessage}</Alert> : ''}
+          <Form.Group controlId='username'>
+              <Form.Label >email</Form.Label>
+              <Form.Control  type='email' value={username} placeholder="email" onChange={ev => setUsername(ev.target.value)} />
+          </Form.Group>
+          <Form.Group controlId='password'>
+              <Form.Label>Password</Form.Label>
+              <Form.Control  type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)} />
+          </Form.Group>
+          <Button variant="primary" type="submit" onClick={handleSubmit}>Login</Button>
+        </Form>
+        </Card.Body>
+        </Card>
+        </Row>
+        
+ 
     )
 }
 

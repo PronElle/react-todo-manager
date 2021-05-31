@@ -7,8 +7,9 @@ import { Container, Alert } from 'react-bootstrap';
 import NavBar from './components/NavBar';
 import TodoForm from './components/TodoForm';
 import TodoPageBody from './components/TodoPageBody'
-import API from './api/api';
 import LoginForm from './components/LoginForm';
+
+import API from './api/api';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 
 // mapping between filter class and filter name
@@ -132,13 +133,10 @@ function App() {
         <Switch>
           <Route path="/login" render={() => {
               return loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={login} />
-            }
-          }/>
+            }}/>
 
           {/* route for filters (including "all"/no filter) */}
-          <Route path="/tasks" render={() =>
-            <>
-            {loggedIn ? 
+          <Route path="/tasks" render={() => { return loggedIn ? 
               <Switch>
                 <Route path="/tasks/:filter" render={({ match }) => {
                   // to protect from invalid urls (e.g. /tasks/foo)
@@ -152,11 +150,10 @@ function App() {
                   return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
                     todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
                 }} />
-
               </Switch>
-              : <Redirect to="/login" /> }
-            </>
-          } />
+              : <Redirect to="/login" /> 
+             
+          }} />
 
 
           <Route path="/add" render={() => {
