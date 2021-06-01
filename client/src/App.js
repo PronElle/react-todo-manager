@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 // react-bootstrap
-import { Container, Alert } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 // components import
 import NavBar from './components/NavBar';
@@ -28,7 +28,7 @@ function App() {
   const [filter, setFilter] = useState('all');
 
   const [message, setMessage] = useState('');
-  const [loggedIn, setLoggedIn] = useState(false); // at the beginning, no user is logged in
+  const [loggedIn, setLoggedIn] = useState(false); 
   const [loading, setLoading] = useState(true);
 
 
@@ -39,11 +39,12 @@ function App() {
         await API.getUserInfo();
         setLoggedIn(true);
       } catch (err) {
-        console.error(err.error);
+        setLoading(false); // not logged but loaded
       }
     };
     checkAuth();
   }, []);
+
 
 
   // mount and filtering 
@@ -106,9 +107,9 @@ function App() {
     try {
       const user = await API.login(credentials);
       setLoggedIn(true);
-      setMessage({ msg: `Welcome, ${user}!`, type: 'success' });
+      setMessage( `Welcome, ${user}!`);
     } catch (err) {
-      setMessage({ msg: err, type: 'danger' });
+      setMessage(err);
     }
   }
 
@@ -123,15 +124,18 @@ function App() {
     setTodos([]);
   }
 
-  
+  // param for custom context
+  const context = {
+    loggedIn: loggedIn,
+    loading: loading,
+    message: message,
+    setMessage: setMessage
+  }
+
   return (
-    <UserContext.Provider value={loggedIn}>
+    <UserContext.Provider value={context}>
       <Container fluid>
-        <NavBar logout={logout} loggedIn={loggedIn}/>
-        {/* UGLY! Find a better placement!! */}
-        {message &&
-           <Alert className="below-nav" variant={message.type} onClose={() => setMessage('')} dismissible>{message.msg}</Alert>
-        }
+        <NavBar logout={logout}/>
         <Switch>
           <Route path="/login" render={() => {
               return loggedIn ? <Redirect to="/tasks" /> : <LoginForm login={login} />
@@ -142,29 +146,27 @@ function App() {
               <Switch>
                 <Route path="/tasks/:filter" render={({ match }) => {
                   // to protect from invalid urls (e.g. /tasks/foo)
-                   if(!loading)
                     return filters[match.params.filter] ?
                       <TodoPageBody setFilter={setFilter} filter={match.params.filter} filters={filters}
-                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
-                      : <Redirect to='/tasks' />;
+                        todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
+                      : <Redirect to='/login' />;
                 }} />
 
                 <Route render={() => {
-                  
                   return <TodoPageBody setFilter={setFilter} filter={"all"} filters={filters}
-                    todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+                    todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
                 }} />
               </Switch>
           </Route> 
 
 
           <Route path="/add" render={() => {
-          if(!loading)
-            return <>
-              <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
-                todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
-              <TodoForm filter={filter} addOrEditTodo={addOrEditTodo} />
-            </>
+            if(!loading)
+              return <>
+                <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
+                  todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
+                <TodoForm filter={filter} addOrEditTodo={addOrEditTodo} />
+              </>
           }} />
 
           <Route path='/update/:id' render={({ match }) => {
@@ -177,7 +179,7 @@ function App() {
               return todoToEdit ?
                 <>
                   <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
-                    todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} loading={loading} />
+                    todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo} />
                   <TodoForm filter={filter}
                     todo={todoToEdit}
                     addOrEditTodo={addOrEditTodo} />

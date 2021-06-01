@@ -41,10 +41,11 @@ function TodoForm(props) {
       setErrorMessage('Please add a valid ToDo');
   }
 
-  const logged = useContext(UserContext); 
+  const context = useContext(UserContext); 
+
   return (
     <>
-     {!logged && <Redirect to='/login'/>}
+     {!context.loggedIn && <Redirect to='/login'/>}
      {submitted && <Redirect to={{pathname:'/tasks/'+  props.filter}}> </Redirect>}
       <Modal show={!submitted} size="lg"
         aria-labelledby="contained-modal-title-vcenter"

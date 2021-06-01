@@ -23,7 +23,7 @@ passport.use(new passportLocal.Strategy((username, password, done) => {
       if (user)
         done(null, user);
       else
-        done(null, false, { message: 'Incorrent username or password' });
+        done(null, false, { message: 'Wrong username or password' });
     }).catch(err => {
       done(err);
     });
