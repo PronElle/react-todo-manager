@@ -6,6 +6,10 @@
     padding-top: 6rem;
 }
 
+.below-nav-center {
+    padding-top: 12rem;
+}
+
 /* left filters */
 .list-group-item[id^='filter'] {
     border-left: none;
@@ -42,6 +46,7 @@
     border-radius: 50%;
 }
 
-
-
-
+.form-group {
+    margin-top: 35px;
+    margin-bottom: 35px;
+}

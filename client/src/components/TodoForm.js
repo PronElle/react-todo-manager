@@ -1,9 +1,10 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import dayjs from 'dayjs';
 import { Link, Redirect } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
+import { UserContext } from '../UserContext';
 
 function TodoForm(props) {
 
@@ -16,14 +17,13 @@ function TodoForm(props) {
   const [completed] = useState(props.todo? props.todo.completed : false );
 
   const [errorMessage, setErrorMessage] = useState();
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSumbit = (event) => {
     event.preventDefault();
 
     // VALIDATION 
     if (description.trim() !== '') {
-      // ToDos with unspecified date or time are added with undefined date
       const todo = { 
         // if undefined, it means we are creating a task
         // addOrEdit will take care of generating the id from API
@@ -32,8 +32,7 @@ function TodoForm(props) {
         important: important, 
         priv: priv, 
         deadline: date && time ? dayjs(date + time) : undefined,
-        completed: completed,
-        user: 1 // temporary
+        completed: completed
       }; 
 
       props.addOrEditTodo(todo);
@@ -42,11 +41,19 @@ function TodoForm(props) {
       setErrorMessage('Please add a valid ToDo');
   }
 
+  const context = useContext(UserContext); 
 
   return (
     <>
-     {submitted && <Redirect to='/tasks'> </Redirect>}
-      <Modal show={!submitted} animation={false}>
+     {!context.loggedIn && <Redirect to='/login'/>}
+     {submitted && <Redirect to={{pathname:'/tasks/'+  props.filter}}> </Redirect>}
+      <Modal show={!submitted} size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered>
+        <Modal.Header>
+          <Modal.Title>Add/Edit Task</Modal.Title>
+        </Modal.Header>
+        
         <Form>
           <Modal.Body>
             <Form.Group controlid='selectedTodo'>
@@ -72,11 +79,11 @@ function TodoForm(props) {
             <Form.Group controlid="formBasicCheckbox">
               <Form.Check type="checkbox" label="Private" value={priv} checked={priv ? 'checked' : ''} onChange={() => setPriv(!priv)} />
             </Form.Group>
-
           </Modal.Body>
 
           <Modal.Footer>
-            <Button variant='success' onClick={handleSumbit} >Save</Button> <Link to = '/tasks'>  <Button variant='secondary'>Cancel</Button></Link>
+            <Button variant='success' onClick={handleSumbit} >Save</Button>
+            <Link to ={{pathname:'/tasks/'+  props.filter}} ><Button variant='secondary'>Cancel</Button></Link>
           </Modal.Footer>
         </Form>
       </Modal>
