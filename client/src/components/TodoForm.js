@@ -45,7 +45,8 @@ function TodoForm(props) {
 
   return (
     <>
-     {!context.loggedIn && <Redirect to='/login'/>}
+     {!context.loading // useEffect runs faster than server
+        && !context.loggedIn && <Redirect to='/login'/>}
      {submitted && <Redirect to={{pathname:'/tasks/'+  props.filter}}> </Redirect>}
       <Modal show={!submitted} size="lg"
         aria-labelledby="contained-modal-title-vcenter"

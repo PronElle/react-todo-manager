@@ -46,7 +46,7 @@ function LoginForm(props) {
             
             <Form>
 
-              <Form.Group controlId='username'>
+              <Form.Group className='login-form' controlId='username'>
                   <InputGroup>
                     <InputGroup.Prepend>
                       <InputGroup.Text>{iconPerson}</InputGroup.Text>
@@ -56,7 +56,7 @@ function LoginForm(props) {
                   </InputGroup>
               </Form.Group>
               
-              <Form.Group controlId='password'>
+              <Form.Group className='login-form' controlId='password'>
                 <InputGroup>
                   <InputGroup.Prepend>
                    <InputGroup.Text>{iconLock}</InputGroup.Text>

@@ -46,7 +46,8 @@
     border-radius: 50%;
 }
 
-.form-group {
+/* login form group */
+.login-form {
     margin-top: 35px;
     margin-bottom: 35px;
 }

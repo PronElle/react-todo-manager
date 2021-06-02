@@ -161,7 +161,6 @@ function App() {
 
 
           <Route path="/add" render={() => {
-            if(!loading)
               return <>
                 <TodoPageBody setFilter={setFilter} filter={filter} filters={filters}
                   todos={todos} updateTodo={addOrEditTodo} deleteTodo={deleteTodo}/>
