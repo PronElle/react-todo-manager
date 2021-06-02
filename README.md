@@ -1,6 +1,6 @@
 # BigLab 2 - Class: 2021 WA1
 
-## Team name: TEAM_NAME
+## Team name: wagroup_63
 
 Team members:
 * s287646 Pronesti Massimiliano
@@ -30,3 +30,61 @@ Provide a short description for API with the required parameters, follow the pro
 * [Sample request, with body (if any)]
 * [Sample response, with body (if any)]
 * [Error responses, if any]
+
+POST /sessions/current
+
+    request body: email, password
+    response body:  user
+    response cookie: user_id
+    Error responses: err
+
+DELETE /sessions/current
+
+    request body: -
+    response body: -
+    response cookie: user_id
+    Error responses: -
+
+GET /sessions/current
+
+    request body: email, password
+    response body: user
+    response cookie: user_id
+    Error responses: 401 "Unauthenticated User"
+
+GET /tasks/?filter
+
+    request body: -
+    response body: tasks
+    Error responses: 500 (database error)
+
+POST /tasks
+
+    request body: task
+    response body: task_id
+    Error responses: 550 (database error)
+
+PUT /tasks/:id
+
+    request body: task
+    response body: task_id
+    Error responses: 503 (PUT Error)
+
+DELETE /tasks/:id
+
+    request body: task_id
+    response body: null
+    Error responses: 550 (DELETE ERROR)
+
+
+
+
+## Login instructions
+To test the application, login with the following credentials
+
+
+| Username           | Passoword |
+|--------------------|-----------|
+| John.doe@polito.it | password  |
+| mhh@polito.it      | password  |
+
