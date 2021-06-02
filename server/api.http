@@ -1,0 +1,15 @@
+
+POST http://localhost:3001/sessions  HTTP/1.1
+Content-Type: application/json
+    
+    {
+      "username": "john.doe@polito.it",
+      "password": "password"
+    }
+
+###
+GET http://localhost:3001/sessions/current  HTTP/1.1
+
+
+### 
+GET http://localhost:3001/tasks HTTP/1.1

@@ -1,6 +1,6 @@
 # BigLab 2 - Class: 2021 WA1
 
-## Team name: TEAM_NAME
+## Team name: WAGroup63
 
 Team members:
 * s287646 Pronesti Massimiliano
@@ -23,10 +23,147 @@ Finally, remember to add the `final` tag for the final submission, otherwise it 
 
 ## List of APIs offered by the server
 
-Provide a short description for API with the required parameters, follow the proposed structure.
+Here's a description of the REST API offered by the server 
 
-* [HTTP Method] [URL, with any parameter]
-* [One-line about what this API is doing]
-* [Sample request, with body (if any)]
-* [Sample response, with body (if any)]
-* [Error responses, if any]
+* POST `/sessions`
+  - request body: an object representing a user (Content-Type: `application/json`)
+
+  ```json
+  {
+      "username": "johndoe@polito.it",
+      "passowrd": "password"
+  }
+  ```
+  - response body:  user info (Content-Type: `application/json`)
+  
+  ```json
+  {
+    "id": 1,
+    "name": "John",
+    "email": "john.doe@polito.it",
+    "hashpasswd": "$2b$10$nHLAdGNSlomYH61JO6clH.kZeY7LPlNeuDY1yThhzoEipjJI3YYdW"
+  }
+  ```
+  - Error responses: `401 (Unauthenticated User)`
+
+* DELETE `/sessions/current`
+  - Request body: None
+  - Response body: None
+
+* GET `/sessions/current`
+  -  request body: None
+  -  response body: user info (Content-Type: `application/json`)
+  
+  ```json
+  {
+    "id": 1,
+    "name": "John",
+    "email": "john.doe@polito.it",
+    "hashpasswd": "$2b$10$nHLAdGNSlomYH61JO6clH.kZeY7LPlNeuDY1yThhzoEipjJI3YYdW"
+  }
+  ```
+  -  Error responses: `401 (Unauthenticated User)`
+
+* GET `/tasks/?filter`
+  - Request body: None
+  - Response body: an array of objects describing the tasks (Content-Type: `application/json`)
+
+  ```json
+  [{
+    "id": 4,
+    "description": "Watch the Express videolecture",
+    "important": true,
+    "priv": true,
+    "deadline": "2021-05-25T07:00:00.000Z",
+    "completed": true,
+    "user": 1
+  },
+  {
+    "id": 6,
+    "description": "Organize a party",
+    "important": false,
+    "priv": false,
+    "deadline": "2021-05-10T18:30:00.000Z",
+    "completed": false,
+    "user": 1
+  },
+  {
+    "id": 7,
+    "description": "Study for the exam",
+    "important": true,
+    "priv": true,
+    "completed": false,
+    "user": 1
+  },
+  {
+    "id": 8,
+    "description": "Prepare the slides for the exam",
+    "important": true,
+    "priv": false,
+    "deadline": "2021-06-01T22:00:00.000Z",
+    "completed": true,
+    "user": 1
+  },
+  {
+    "id": 9,
+    "description": "Call Mary",
+    "important": false,
+    "priv": true,
+    "completed": true,
+    "user": 1
+  }]
+  ```
+  - Error responses: `500 (database error)`
+
+* POST `/tasks`
+  -  Request body: an object representing a task (Content-Type: `application/json`)
+
+  ```json
+  {
+      "id": 11,
+      "description": "foo",
+      "important": 0,
+      "private": 0,
+      "completed": 1,
+      "user": 1
+   }
+  ```
+  -  Response body: None
+  -  Error responses: `550 (database error)`
+
+* PUT `/tasks/:id`
+  -  Request body: an object representing a task (Content-Type: `application/json`)
+
+  ```json
+  {
+      "id": 11,
+      "description": "foo",
+      "important": 0,
+      "private": 0,
+      "completed": 1,
+      "user": 1
+   }
+
+  ```
+  -  Response body: None
+  -  Error responses: `503 (PUT Error)`
+
+* DELETE `/tasks/:id`
+  -  Request body: None
+  -  Response body: None
+  -  Error responses: `550 (DELETE ERROR)`
+
+
+
+
+## Login instructions
+To test the application, login with the following credentials
+
+
+| Username           | Passoword |
+|--------------------|-----------|
+| john.doe@polito.it | password  |
+| mhh@polito.it      | password  |
+
+
+

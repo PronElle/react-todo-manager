@@ -1,0 +1,53 @@
+.vheight-100 {
+    min-height: 100vh;
+}
+
+.below-nav {
+    padding-top: 6rem;
+}
+
+.below-nav-center {
+    padding-top: 12rem;
+}
+
+/* left filters */
+.list-group-item[id^='filter'] {
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+}
+
+
+.list-group-item.active {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.list-group-item-action:hover {
+    background-color: #9becae;
+}
+
+
+.custom-checkbox .custom-control-input.important:checked~.custom-control-label::before{
+    background-color: red;
+  }
+
+.custom-checkbox .custom-control-input.important:focus~.custom-control-label::before{
+    box-shadow:  0 0 0 0.2rem rgb(255, 148, 148);
+}
+
+/* Add new todo button */
+.fixed-right-bottom {
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    z-index: 1030;
+    margin: 0 1.5rem 1.5rem 0;
+    border-radius: 50%;
+}
+
+/* login form group */
+.login-form {
+    margin-top: 35px;
+    margin-bottom: 35px;
+}
