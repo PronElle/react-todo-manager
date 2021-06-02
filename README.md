@@ -25,39 +25,84 @@ Finally, remember to add the `final` tag for the final submission, otherwise it 
 
 Here's a description of the REST API offered by the server 
 
-* POST /sessions/current
-  - request body: email, password
+* POST `/sessions`
+  - request body: an object representing a user (Content-Type: `application/json`)
+  ```
+  {
+      "email": "johndoe@polito.it",
+      "passowrd": "password"
+  }
+  ```
   - response body:  user
-  - response cookie: user_id
 
-* DELETE /sessions/current
+* DELETE `/sessions/current`
   - request body: None
   - response body: None
-  - response cookie: user_id
 
-* GET /sessions/current
-  -  request body: email, password
+* GET `/sessions/current`
+  -  request body: None
   -  response body: user
-  -  response cookie: user_id
   -  Error responses: `401 (Unauthenticated User)`
 
 * GET `/tasks/?filter`
-  - request body: -
-  - response body: tasks
+  - request body: None
+  - response body: an array of objects describing the tasks (Content-Type: `application/json`)
+  ```
+  [{
+      "id": 7,
+      "description": "Study for the exam",
+      "important": 1,
+      "private": 1,
+      "deadline": "2021-06-02 00:00",
+      "completed": 1,
+      "user": 1
+   }, {
+      "id": 11,
+      "description": "foo",
+      "important": 0,
+      "private": 0,
+      "deadline": NULL,
+      "completed": 1,
+      "user": 1
+   },
+   ...
+  ]
+  ```
   - Error responses: `500 (database error)`
 
 * POST `/tasks`
-  -  request body: task
-  -  response body: task_id
+  -  request body: an object representing a task (Content-Type: `application/json`)
+  ```
+  {
+    "id": 11,
+      "description": "foo",
+      "important": 0,
+      "private": 0,
+      "deadline": NULL,
+      "completed": 1,
+      "user": 1
+   }
+  ```
   -  Error responses: `550 (database error)`
 
 * PUT `/tasks/:id`
-  -  request body: task
-  -  response body: task_id
+  -  request body: an object representing a task (Content-Type: `application/json`)
+  ```
+  {
+      "id": 11,
+      "description": "foo",
+      "important": 0,
+      "private": 0,
+      "deadline": NULL,
+      "completed": 1,
+      "user": 1
+   }
+
+  ```
   -  Error responses: `503 (PUT Error)`
 
 * DELETE `/tasks/:id`
-  -  request body: task_id
+  -  request body: None
   -  response body: None
   -  Error responses: `550 (DELETE ERROR)`
 
@@ -70,6 +115,8 @@ To test the application, login with the following credentials
 
 | Username           | Passoword |
 |--------------------|-----------|
-| John.doe@polito.it | password  |
+| john.doe@polito.it | password  |
 | mhh@polito.it      | password  |
+
+
 
