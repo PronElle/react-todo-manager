@@ -1,6 +1,6 @@
 # BigLab 2 - Class: 2021 WA1
 
-## Team name: wagroup_63
+## Team name: WAGroup63
 
 Team members:
 * s287646 Pronesti Massimiliano
@@ -23,58 +23,43 @@ Finally, remember to add the `final` tag for the final submission, otherwise it 
 
 ## List of APIs offered by the server
 
-Provide a short description for API with the required parameters, follow the proposed structure.
+Here's a description of the REST API offered by the server 
 
-* [HTTP Method] [URL, with any parameter]
-* [One-line about what this API is doing]
-* [Sample request, with body (if any)]
-* [Sample response, with body (if any)]
-* [Error responses, if any]
+* POST /sessions/current
+  - request body: email, password
+  - response body:  user
+  - response cookie: user_id
 
-POST /sessions/current
+* DELETE /sessions/current
+  - request body: None
+  - response body: None
+  - response cookie: user_id
 
-    request body: email, password
-    response body:  user
-    response cookie: user_id
-    Error responses: err
+* GET /sessions/current
+  -  request body: email, password
+  -  response body: user
+  -  response cookie: user_id
+  -  Error responses: `401 (Unauthenticated User)`
 
-DELETE /sessions/current
+* GET `/tasks/?filter`
+  - request body: -
+  - response body: tasks
+  - Error responses: `500 (database error)`
 
-    request body: -
-    response body: -
-    response cookie: user_id
-    Error responses: -
+* POST `/tasks`
+  -  request body: task
+  -  response body: task_id
+  -  Error responses: `550 (database error)`
 
-GET /sessions/current
+* PUT `/tasks/:id`
+  -  request body: task
+  -  response body: task_id
+  -  Error responses: `503 (PUT Error)`
 
-    request body: email, password
-    response body: user
-    response cookie: user_id
-    Error responses: 401 "Unauthenticated User"
-
-GET /tasks/?filter
-
-    request body: -
-    response body: tasks
-    Error responses: 500 (database error)
-
-POST /tasks
-
-    request body: task
-    response body: task_id
-    Error responses: 550 (database error)
-
-PUT /tasks/:id
-
-    request body: task
-    response body: task_id
-    Error responses: 503 (PUT Error)
-
-DELETE /tasks/:id
-
-    request body: task_id
-    response body: null
-    Error responses: 550 (DELETE ERROR)
+* DELETE `/tasks/:id`
+  -  request body: task_id
+  -  response body: None
+  -  Error responses: `550 (DELETE ERROR)`
 
 
 
