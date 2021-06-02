@@ -1,42 +1,11 @@
-POST http://localhost:3001/tasks
-Content-Type: application/json
 
-
-
-    {"description":"uu",
-    "priv":1,
-    "important":0, 
-    "deadline": "",
-    "completed":0, 
-    "user":1
-    
-    }
-###
-DELETE  http://localhost:3001/tasks/11
-####
-
-PUT  http://localhost:3001/tasks/28  HTTP/1.1
+POST http://localhost:3001/sessions  HTTP/1.1
 Content-Type: application/json
     
-    
-    {"description":"test",
-    "priv":1,
-    "important":0, 
-    "deadline": "2021-05-11",
-    "completed":1
+    {
+      "username": "john.doe@polito.it",
+      "password": "password"
     }
 
 ###
-
-GET http://localhost:3001/tasks/18 HTTP/1.1
-
-###
-GET http://localhost:3001/tasks?filter=all HTTP/1.1
-
-
-###
-GET http://localhost:3001/tasks?filter=today HTTP/1.1
-
-
-###
-GET http://localhost:3001/tasks?filter=sevendays HTTP/1.1
+GET http://localhost:3001/sessions/current  HTTP/1.1

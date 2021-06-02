@@ -27,27 +27,48 @@ Here's a description of the REST API offered by the server
 
 * POST `/sessions`
   - request body: an object representing a user (Content-Type: `application/json`)
-  ```
+
+  ```json
   {
-      "email": "johndoe@polito.it",
+      "username": "johndoe@polito.it",
       "passowrd": "password"
   }
   ```
-  - response body:  user
+  - response body:  user info (Content-Type: `application/json`)
+  
+  ```json
+  {
+    "id": 1,
+    "name": "John",
+    "email": "john.doe@polito.it",
+    "hashpasswd": "$2b$10$nHLAdGNSlomYH61JO6clH.kZeY7LPlNeuDY1yThhzoEipjJI3YYdW"
+  }
+  ```
+  - Error responses: `401 (Unauthenticated User)`
 
 * DELETE `/sessions/current`
-  - request body: None
-  - response body: None
+  - Request body: None
+  - Response body: None
 
 * GET `/sessions/current`
   -  request body: None
-  -  response body: user
+  -  response body: user info (Content-Type: `application/json`)
+  
+  ```json
+  {
+    "id": 1,
+    "name": "John",
+    "email": "john.doe@polito.it",
+    "hashpasswd": "$2b$10$nHLAdGNSlomYH61JO6clH.kZeY7LPlNeuDY1yThhzoEipjJI3YYdW"
+  }
+  ```
   -  Error responses: `401 (Unauthenticated User)`
 
 * GET `/tasks/?filter`
-  - request body: None
-  - response body: an array of objects describing the tasks (Content-Type: `application/json`)
-  ```
+  - Request body: None
+  - Response body: an array of objects describing the tasks (Content-Type: `application/json`)
+
+  ```json
   [{
       "id": 7,
       "description": "Study for the exam",
@@ -71,10 +92,11 @@ Here's a description of the REST API offered by the server
   - Error responses: `500 (database error)`
 
 * POST `/tasks`
-  -  request body: an object representing a task (Content-Type: `application/json`)
-  ```
+  -  Request body: an object representing a task (Content-Type: `application/json`)
+
+  ```json
   {
-    "id": 11,
+      "id": 11,
       "description": "foo",
       "important": 0,
       "private": 0,
@@ -83,11 +105,13 @@ Here's a description of the REST API offered by the server
       "user": 1
    }
   ```
+  -  Response body: None
   -  Error responses: `550 (database error)`
 
 * PUT `/tasks/:id`
-  -  request body: an object representing a task (Content-Type: `application/json`)
-  ```
+  -  Request body: an object representing a task (Content-Type: `application/json`)
+
+  ```json
   {
       "id": 11,
       "description": "foo",
@@ -99,11 +123,12 @@ Here's a description of the REST API offered by the server
    }
 
   ```
+  -  Response body: None
   -  Error responses: `503 (PUT Error)`
 
 * DELETE `/tasks/:id`
-  -  request body: None
-  -  response body: None
+  -  Request body: None
+  -  Response body: None
   -  Error responses: `550 (DELETE ERROR)`
 
 
