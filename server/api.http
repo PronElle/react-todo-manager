@@ -9,3 +9,7 @@ Content-Type: application/json
 
 ###
 GET http://localhost:3001/sessions/current  HTTP/1.1
+
+
+### 
+GET http://localhost:3001/tasks HTTP/1.1

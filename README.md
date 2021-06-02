@@ -70,24 +70,48 @@ Here's a description of the REST API offered by the server
 
   ```json
   [{
-      "id": 7,
-      "description": "Study for the exam",
-      "important": 1,
-      "private": 1,
-      "deadline": "2021-06-02 00:00",
-      "completed": 1,
-      "user": 1
-   }, {
-      "id": 11,
-      "description": "foo",
-      "important": 0,
-      "private": 0,
-      "deadline": NULL,
-      "completed": 1,
-      "user": 1
-   },
-   ...
-  ]
+    "id": 4,
+    "description": "Watch the Express videolecture",
+    "important": true,
+    "priv": true,
+    "deadline": "2021-05-25T07:00:00.000Z",
+    "completed": true,
+    "user": 1
+  },
+  {
+    "id": 6,
+    "description": "Organize a party",
+    "important": false,
+    "priv": false,
+    "deadline": "2021-05-10T18:30:00.000Z",
+    "completed": false,
+    "user": 1
+  },
+  {
+    "id": 7,
+    "description": "Study for the exam",
+    "important": true,
+    "priv": true,
+    "completed": false,
+    "user": 1
+  },
+  {
+    "id": 8,
+    "description": "Prepare the slides for the exam",
+    "important": true,
+    "priv": false,
+    "deadline": "2021-06-01T22:00:00.000Z",
+    "completed": true,
+    "user": 1
+  },
+  {
+    "id": 9,
+    "description": "Call Mary",
+    "important": false,
+    "priv": true,
+    "completed": true,
+    "user": 1
+  }]
   ```
   - Error responses: `500 (database error)`
 
@@ -100,7 +124,6 @@ Here's a description of the REST API offered by the server
       "description": "foo",
       "important": 0,
       "private": 0,
-      "deadline": NULL,
       "completed": 1,
       "user": 1
    }
@@ -117,7 +140,6 @@ Here's a description of the REST API offered by the server
       "description": "foo",
       "important": 0,
       "private": 0,
-      "deadline": NULL,
       "completed": 1,
       "user": 1
    }
