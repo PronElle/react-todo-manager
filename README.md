@@ -1,5 +1,18 @@
 # BigLab 2 - Class: 2021 WA1
 
+<p align="left">
+ <img alt="react" src="https://badges.aleen42.com/src/react.svg"/>
+ <img alt="js" src="https://badges.aleen42.com/src/javascript.svg"/>
+ <img alt="node" src="https://badges.aleen42.com/src/node.svg" />
+ <img alt="react-router" src="https://badges.aleen42.com/src/router.svg"/>
+ <img height="21" src="https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white"/>
+  <img height="22" alt="express" src="https://img.shields.io/badge/Express.js-404D59?style=for-the-badge"/>
+ <img height="22" alt="sqlite" src="https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white"/>
+</p>
+
+
+Mirroring of the official repository hosted on github classroom.
+
 ## Team name: WAGroup63
 
 Team members:
@@ -153,7 +166,9 @@ Here's a description of the REST API offered by the server
   -  Response body: None
   -  Error responses: `550 (DELETE ERROR)`
 
+## Screenshot
 
+![Screenshot](assets/screenshot.png)
 
 
 ## Login instructions
